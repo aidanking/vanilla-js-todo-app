@@ -28,3 +28,9 @@ ul {
   margin: 0 auto;
   max-width: 800px;
 }
+
+.todo {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 2em;
+}
