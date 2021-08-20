@@ -11,6 +11,7 @@
     const todo = {
       id: maxId,
       name: addTodoInput.value,
+      isDone: false,
     };
 
     todos.push(todo);
@@ -19,15 +20,62 @@
 
   function addTodoElement(todo) {
     const todosElement = document.querySelector('.todos');
-    const todoElement = document.createElement('li');
 
-    todoElement.innerText = todo.name;
+    todosElement.append(createTodoElement(todo));
+    addTodoForm.reset();
+  }
+
+  function createTodoElement(todo) {
+    const todoElement = document.createElement('li');
+    todoElement.append(createTodoCheckboxContainer(todo));
     todoElement.append(createDeleteButton());
     todoElement.className = 'todo';
     todoElement.dataset.todoId = todo.id;
 
-    todosElement.append(todoElement);
-    addTodoForm.reset();
+    return todoElement;
+  }
+
+  function createTodoCheckboxContainer(todo) {
+    const todoCheckboxContainer = document.createElement('div');
+
+    todoCheckboxContainer.append(createTodoCheckboxLabel(todo));
+    todoCheckboxContainer.append(createTodoCheckbox(todo));
+
+    return todoCheckboxContainer;
+  }
+
+  function createTodoCheckboxLabel(todo) {
+    const label = document.createElement('label');
+    label.innerText = todo.name;
+    label.htmlFor = `todo-${todo.id}`;
+
+    return label;
+  }
+
+  function createTodoCheckbox(todo) {
+    const checkbox = document.createElement('input');
+    checkbox.id = `todo-${todo.id}`;
+    checkbox.type = 'checkbox';
+    checkbox.addEventListener('change', toogleTodo);
+
+    return checkbox;
+  }
+
+  function toogleTodo(e) {
+    const { target } = e;
+    const todoElement = target.parentElement.parentElement;
+    const todoId = Number(todoElement.dataset.todoId);
+    const label = todoElement.querySelector('label');
+
+    todos = todos.map((x) => {
+      if (x.id === todoId) {
+        return { ...x, isDone: !x.isDone };
+      }
+
+      return x;
+    });
+
+    label.classList.toggle('done');
   }
 
   function createDeleteButton() {
