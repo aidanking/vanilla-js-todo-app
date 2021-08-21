@@ -27,10 +27,10 @@
 
   function createTodoElement(todo) {
     const todoElement = document.createElement('li');
-    todoElement.append(createTodoCheckboxContainer(todo));
-    todoElement.append(createDeleteButton());
+
     todoElement.className = 'todo';
     todoElement.dataset.todoId = todo.id;
+    todoElement.append(createTodoCheckboxContainer(todo), createDeleteButton());
 
     return todoElement;
   }
@@ -38,14 +38,17 @@
   function createTodoCheckboxContainer(todo) {
     const todoCheckboxContainer = document.createElement('div');
 
-    todoCheckboxContainer.append(createTodoCheckboxLabel(todo));
-    todoCheckboxContainer.append(createTodoCheckbox(todo));
+    todoCheckboxContainer.append(
+      createTodoCheckboxLabel(todo),
+      createTodoCheckbox(todo)
+    );
 
     return todoCheckboxContainer;
   }
 
   function createTodoCheckboxLabel(todo) {
     const label = document.createElement('label');
+
     label.innerText = todo.name;
     label.htmlFor = `todo-${todo.id}`;
 
@@ -54,6 +57,7 @@
 
   function createTodoCheckbox(todo) {
     const checkbox = document.createElement('input');
+
     checkbox.id = `todo-${todo.id}`;
     checkbox.type = 'checkbox';
     checkbox.addEventListener('change', toogleTodo);
