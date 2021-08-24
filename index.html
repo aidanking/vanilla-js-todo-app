@@ -11,7 +11,23 @@
     <main class="container">
       <h1>Todo App</h1>
       <form class="add-todo-form">
-        <input name="todoName" type="text" class="add-todo-input" />
+        <div>
+          <label for="todoName">Todo Name</label>
+          <input
+            id="todoName"
+            name="todoName"
+            type="text"
+            class="add-todo-input"
+          />
+        </div>
+        <div>
+          <label for="todoFilter">Filter</label>
+          <select id="todoFilter" name="todoFilter" class="todo-filter">
+            <option value="all">All</option>
+            <option value="todo">Todo</option>
+            <option value="done">Done</option>
+          </select>
+        </div>
       </form>
       <ul class="todos"></ul>
     </main>

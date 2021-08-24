@@ -1,7 +1,9 @@
 (() => {
   const addTodoForm = document.querySelector('.add-todo-form');
   const addTodoInput = document.querySelector('.add-todo-input');
+  const todosFilter = document.querySelector('.todo-filter');
   let todos = [];
+  let filter = 'all';
   let maxId = 0;
 
   function addTodo(e) {
@@ -78,6 +80,48 @@
     todoListItemToBeDeleted.remove();
   }
 
+  function filterTodos(e) {
+    const { target } = e;
+    const todosListElement = document.querySelector('.todos');
+    const todosListFragment = document.createDocumentFragment();
+
+    removeChildElements(todosListElement);
+
+    filter = target.value;
+
+    getTodosForFilter(filter).forEach((todo) => {
+      todosListFragment.append(todoListItem(todo));
+    });
+
+    todosListElement.append(todosListFragment);
+  }
+
+  /**
+   *
+   * @param {HTMLElement} element
+   */
+  function removeChildElements(element) {
+    let current = element.firstElementChild;
+
+    while (current) {
+      let temp = current;
+      current = current.nextElementSibling;
+      temp.remove();
+    }
+  }
+
+  function getTodosForFilter(filter) {
+    if (filter === 'all') {
+      return todos;
+    } else if (filter === 'todo') {
+      return todos.filter((x) => !x.isDone);
+    } else if (filter === 'done') {
+      return todos.filter((x) => x.isDone);
+    }
+
+    return todos;
+  }
+
   function todoListItem(todo) {
     const todoListItem = document.createElement('li');
 
@@ -114,6 +158,12 @@
     label.innerText = todo.name;
     label.htmlFor = `todo-${todo.id}`;
 
+    if (todo.isDone) {
+      label.className = 'done';
+    } else {
+      label.className = '';
+    }
+
     return label;
   }
 
@@ -122,6 +172,7 @@
 
     checkbox.id = `todo-${todo.id}`;
     checkbox.type = 'checkbox';
+    checkbox.checked = todo.isDone;
     checkbox.addEventListener('change', toogleTodo);
 
     return checkbox;
@@ -160,4 +211,5 @@
   }
 
   addTodoForm.addEventListener('submit', addTodo);
+  todosFilter.addEventListener('change', filterTodos);
 })();
