@@ -16,11 +16,15 @@ h1 {
 
 input {
   padding: 0.5em;
-  width: 100%;
 }
 
 ul {
+  padding: 0;
   list-style: none;
+}
+
+label {
+  display: inline-block;
 }
 
 .container {
@@ -40,6 +44,10 @@ ul {
   margin-top: 1em;
 }
 
+.add-todo-input {
+  width: 100%;
+}
+
 @keyframes fade-in {
   from {
     opacity: 0;
@@ -49,6 +57,19 @@ ul {
   }
 }
 
+.todo-checkbox-container {
+  display: flex;
+  align-items: center;
+}
+
+.todo-checkbox-container > * + * {
+  margin-left: 3px;
+}
+
 .done {
   text-decoration: line-through;
+}
+
+.todo-button-container > * + * {
+  margin-left: 5px;
 }

@@ -22,6 +22,7 @@
 
     todoList.append(todoListItem(todo));
     addTodoForm.reset();
+    updateTodoCount();
   }
 
   function toogleTodo(e) {
@@ -39,12 +40,13 @@
     });
 
     label.classList.toggle('done');
+    updateTodoCount();
   }
 
   function addEditForm(e) {
     const { target } = e;
 
-    const todoElement = target.parentElement;
+    const todoElement = target.parentElement.parentElement;
     const todoListItem = todoElement.parentElement;
     const todoId = Number(todoListItem.dataset.todoId);
     const todo = todos.find((x) => x.id === todoId);
@@ -72,12 +74,14 @@
   function deleteTodo(e) {
     const { target } = e;
 
-    const todoListItemToBeDeleted = target.parentElement.parentElement;
+    const todoListItemToBeDeleted =
+      target.parentElement.parentElement.parentElement;
     const { todoId } = todoListItemToBeDeleted.dataset;
 
     todos = todos.filter((x) => x.id !== Number(todoId));
 
     todoListItemToBeDeleted.remove();
+    updateTodoCount();
   }
 
   function filterTodos(e) {
@@ -89,17 +93,20 @@
 
     filter = target.value;
 
+    if (filter === 'done') {
+      addTodoInput.disabled = true;
+    } else {
+      addTodoInput.disabled = false;
+    }
+
     getTodosForFilter(filter).forEach((todo) => {
       todosListFragment.append(todoListItem(todo));
     });
 
     todosListElement.append(todosListFragment);
+    updateTodoCount();
   }
 
-  /**
-   *
-   * @param {HTMLElement} element
-   */
   function removeChildElements(element) {
     let current = element.firstElementChild;
 
@@ -122,6 +129,13 @@
     return todos;
   }
 
+  function updateTodoCount() {
+    const countHeader = document.querySelector('.todo-count');
+    const count = todos.filter((x) => !x.isDone).length;
+
+    countHeader.textContent = `${count} Todos Left`;
+  }
+
   function todoListItem(todo) {
     const todoListItem = document.createElement('li');
 
@@ -135,19 +149,16 @@
     const todoElement = document.createElement('div');
 
     todoElement.className = 'todo';
-    todoElement.append(
-      todoCheckboxContainer(todo),
-      todoEditButton(),
-      todoDeleteButton()
-    );
+    todoElement.append(todoCheckboxContainer(todo), todoButtonContainer(todo));
 
     return todoElement;
   }
 
   function todoCheckboxContainer(todo) {
     const todoCheckboxContainer = document.createElement('div');
+    todoCheckboxContainer.className = 'todo-checkbox-container';
 
-    todoCheckboxContainer.append(todoCheckboxLabel(todo), todoCheckbox(todo));
+    todoCheckboxContainer.append(todoCheckbox(todo), todoCheckboxLabel(todo));
 
     return todoCheckboxContainer;
   }
@@ -176,6 +187,15 @@
     checkbox.addEventListener('change', toogleTodo);
 
     return checkbox;
+  }
+
+  function todoButtonContainer(todo) {
+    const todoButtonContainer = document.createElement('div');
+    todoButtonContainer.className = 'todo-button-container';
+
+    todoButtonContainer.append(todoEditButton(), todoDeleteButton());
+
+    return todoButtonContainer;
   }
 
   function todoEditButton() {
